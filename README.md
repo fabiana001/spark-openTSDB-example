@@ -1,4 +1,4 @@
-# To run this code:
+# To run this code :
 
 ## Run required servers in Local Mode
 1. If you need kafka (and Zookeeper) run the class KafkaLocal setting the input parameter to "true" (the local instance of Kafka will be executed with Zookeeper)
