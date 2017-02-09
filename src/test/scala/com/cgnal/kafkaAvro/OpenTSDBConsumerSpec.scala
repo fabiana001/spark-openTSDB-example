@@ -77,21 +77,23 @@ class OpenTSDBConsumerSpec extends WordSpec with MustMatchers with BeforeAndAfte
     streamingContext = new StreamingContext(sparkContext, Milliseconds(500))
     Thread.sleep(10000)
     kafkaLocal.start()
-    kafkaLocal.createTopic(topic)
+    consumer = new OpenTSDBConsumer(streamingContext, hadoopConf, Set(topic), props)
+    //kafkaLocal.createTopic(topic)
   }
 
   "OpenTSDBConsumer" must {
-    "should capture the stream from kafka and write it on HBASE" in {
-
+    " capture the stream from kafka and write it on HBASE" in {
+      kafkaLocal.createTopic(topic)
       val thread = new Thread(new Runnable {
         override def run(): Unit = producer.run(2, 100, 500, propsProducer, topic, metric)
       })
-      thread.start()
+      thread.run()
+      Thread.sleep(1000)
+      println("MAH")
 
-      consumer = new OpenTSDBConsumer(streamingContext, hadoopConf, Set(topic), props)
       consumer.run()
       streamingContext.start()
-      Thread.sleep(2000)
+      //Thread.sleep(2000)
       streamingContext.stop(false, false)
 
       val conf = HBaseConfiguration.create()
@@ -100,6 +102,8 @@ class OpenTSDBConsumerSpec extends WordSpec with MustMatchers with BeforeAndAfte
 
       val scan = new Scan()
       scan.setCaching(100)
+
+      println(scan.getMaxResultSize)
 
       val getRdd: RDD[(ImmutableBytesWritable, Result)] = hbaseContext.hbaseRDD(TableName.valueOf("tsdb"), scan)
 

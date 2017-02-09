@@ -123,6 +123,7 @@ class KafkaLocal(var runZookeeper: Boolean = true) {
   def createTopic(topic: String): Unit = {
     AdminUtils.createTopic(kafkaServer.get.zkUtils, topic, 3, 1, new Properties())
     logger.info(s"Topic $topic created!")
+    println(s"Topic $topic created!")
   }
 
   def start(): Unit = {
@@ -149,7 +150,7 @@ object Main extends App {
   //echo stat | nc <zookeeper ip> 2181
   //echo mntr | nc <zookeeper ip> 2181
   // echo isro  | nc <zookeeper ip> 2181
-  val kfServer = new KafkaLocal(false)
+  val kfServer = new KafkaLocal(true)
   kfServer.start()
   //val topic = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.topic")
   //kfServer.createTopic(topic)

@@ -40,7 +40,7 @@ class OpenTSDBConsumer[T <: EventConverter: ClassTag](@transient ssc: StreamingC
   private def initOpenTSDB() = {
     val sparkContext = ssc.sparkContext
     val sqlContext = new SQLContext(sparkContext)
-    Some(new OpenTSDBContext(sqlContext, Some(hadoopConf)))
+    Some(new OpenTSDBContext(sqlContext))
   }
 
   def this(@transient ssc: StreamingContext,

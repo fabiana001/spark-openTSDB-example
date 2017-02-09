@@ -68,7 +68,14 @@ def commonSettings(moduleName: String) = Seq(
 val hadoopHBaseExcludes =
 (moduleId: ModuleID) => moduleId.
   excludeAll(ExclusionRule(organization = "org.mortbay.jetty")).
+  excludeAll(ExclusionRule(organization = "org.eclipse.jetty")).
   excludeAll(ExclusionRule(organization = "javax.servlet"))
+
+val hdfsBaseExcludes =
+  (moduleId: ModuleID) => moduleId.
+    excludeAll(ExclusionRule(organization = "org.eclipse.jetty")).
+    excludeAll(ExclusionRule(organization = "javax.servlet"))
+
 
 val opentsdbExcludes =
   (moduleId: ModuleID) => moduleId.
@@ -107,12 +114,13 @@ val commonDependencies = Seq(
   hadoopHBaseExcludes("org.apache.hbase" % "hbase-hadoop-compat" % hbaseVersion % "test" classifier "tests" extra "type" -> "test-jar"),
   hadoopHBaseExcludes("org.apache.hbase" % "hbase-hadoop2-compat" % hbaseVersion % "test" classifier "tests" extra "type" -> "test-jar"),
   hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-client" % hadoopVersion % "test" classifier "tests"),
-  hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" classifier "tests"),
-  hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" classifier "tests" extra "type" -> "test-jar"),
-  hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" extra "type" -> "test-jar"),
+  hdfsBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" classifier "tests"),
+  hdfsBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" classifier "tests" extra "type" -> "test-jar"),
+  hdfsBaseExcludes("org.apache.hadoop" % "hadoop-hdfs" % hadoopVersion % "test" extra "type" -> "test-jar"),
   hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-client" % hadoopVersion % "test" classifier "tests"),
   hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-minicluster" % hadoopVersion % "test"),
-  hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-common" % hadoopVersion % "test" classifier "tests" extra "type" -> "test-jar"),
+  hadoopHBaseExcludes("org.apache.hbase" % "hbase-spark" % hbaseVersion % "test"),
+  hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-common" % hadoopVersion % "test" classifier "tests" extra "type" -> "test-jar") excludeAll(ExclusionRule(organization = "org.eclipse.jetty")),
   hadoopHBaseExcludes("org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % hadoopVersion % "test" classifier "tests")
  )
 
@@ -121,7 +129,7 @@ val commonDependencies = Seq(
   * Otherwise when submitted with spark_submit they are  "provided"
   */
 def providedOrCompileDependencies(scope: String = "compile") = Seq(
-  "org.apache.kafka" %% "kafka" % "0.9.0-kafka-2.0.0" % scope,
+  "org.apache.kafka" %% "kafka" % "0.9.0-kafka-1.6.0" % scope,
   hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion % scope),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-core" % sparkVersion % scope),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-sql" % sparkVersion % scope),

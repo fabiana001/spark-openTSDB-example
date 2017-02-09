@@ -83,7 +83,7 @@ object HBaseLocalMain extends App {
 
   val hbaseLocal = new HbaseLocal()
   hbaseLocal.start()
-
+  println("CIAOOOOOO")
   //hbaseLocal.stop()
 
 }
